@@ -1,3 +1,6 @@
+#install the latest release of Ultralytics
+#pip install git+https://github.com/ultralytics/ultralytics.git
+
 from ultralytics import YOLOE
 from ultralytics import YOLO
 import cv2
@@ -12,22 +15,20 @@ model = YOLOE(model_name)
 names = ["person", "ping pong paddle", "ball on a table", "blue cup", "table"]
 model.set_classes(names, model.get_text_pe(names))
 
-model.export(format="openvino", dynamic=True, half=True)
+model.export(format="openvino", dynamic=False, half=True)
 
 model_ov = YOLO(ov_model_name)
-
-video_cap = cv2.VideoCapture(0)
-video_cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-video_cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+video_cap = cv2.VideoCapture(1)
+#video_cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+#video_cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
 while True:
 	ret, frame = video_cap.read()
 
-	# Execute prediction for specified categories on an image
-	results = model_ov.predict(frame,conf=0.1)
+	#can choose between intel:cpu, intel:gpu, or intel:npu
+	results = model_ov.predict(frame,conf=0.1, device="intel:gpu")
 
 	# Show results
-	#results[0].show()
 	frame_out=results[0].plot()
 	if not ret:
 		break
