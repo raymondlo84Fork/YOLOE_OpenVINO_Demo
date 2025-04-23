@@ -1,1 +1,2 @@
-pip install --upgrade openvino ultralytics
+pip install --upgrade openvino 
+pip install git+https://github.com/ultralytics/ultralytics.git
